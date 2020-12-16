@@ -57,14 +57,15 @@ def part2(lines):
 
     field_candidates = {rule.field: set(range(len(valid_tickets[0]))) for rule in rules}
 
+    for rule in rules:
+        for ticket in valid_tickets:
+            candidates = field_candidates[rule.field]
+            for (column, value) in enumerate(ticket):
+                if column in candidates:
+                    if not any([value in range(interval[0], interval[1] + 1) for interval in rule.intervals]):
+                        candidates.remove(column)
+
     while True:
-        for rule in rules:
-            for ticket in valid_tickets:
-                candidates = field_candidates[rule.field]
-                for (column, value) in enumerate(ticket):
-                    if column in candidates:
-                        if not any([value in range(interval[0], interval[1] + 1) for interval in rule.intervals]):
-                            candidates.remove(column)
         fixed_columns = {}
         for field, columns in field_candidates.items():
             if len(columns) == 1:
